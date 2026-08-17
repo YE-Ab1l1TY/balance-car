@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32: 编译、烧录并调试 (OpenOCD)",
+            "type": "stgdbtarget",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMake: 编译 (Debug)",
+            "program": "${workspaceFolder}\\build\\Debug\\phc.elf",
+            "gdb": "E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740\\tools\\bin\\arm-none-eabi-gdb.exe",
+            "deviceName": "STM32F103C8T6",
+            "deviceCore": "Cortex-M3",
+            "serverExe": "openocd.exe",
+            "serverCwd": "E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.openocd.win32_2.4.400.202601091506\\tools\\bin",
+            "serverParameters": [
+                "-s",
+                "E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.debug.openocd_2.3.300.202602021527\\resources\\openocd\\st_scripts",
+                "-f",
+                "interface/stlink-dap.cfg",
+                "-f",
+                "target/stm32f1x.cfg",
+                "-c",
+                "adapter speed 1000"
+            ],
+            "serverHost": "localhost",
+            "serverPort": "3333",
+            "serverStartupDelay": 1000,
+            "automaticallyKillServer": true,
+            "runEntry": "main",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${workspaceFolder}\\build\\Debug\\phc.elf",
+                    "symbolFileName": "${workspaceFolder}\\build\\Debug\\phc.elf"
+                }
+            ]
+        }
+    ]
+}

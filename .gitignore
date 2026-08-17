@@ -1,15 +1,47 @@
+# ==============================
+# Build directories
+# ==============================
 build/
-cmake-build-*/
+Debug/
+Release/
+
+# ==============================
+# CMake generated files
+# ==============================
 CMakeFiles/
 CMakeCache.txt
+cmake_install.cmake
+Makefile
 compile_commands.json
-*.elf
-*.bin
-*.hex
-*.map
+
+# ==============================
+# Compiled files
+# ==============================
 *.o
 *.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
 *.d
-*.su
-.vscode/
+*.a
 
+# ==============================
+# Temporary files
+# ==============================
+*.tmp
+*.bak
+*.swp
+*~
+
+# ==============================
+# OS generated files
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# VS Code temporary/log files
+# ==============================
+.vscode/*.log

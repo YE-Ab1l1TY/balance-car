@@ -1,10 +1,8 @@
 #include "stm32f10x.h"
-#include "Timer.h"
 
 void Timer_Init(void)
 {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_TIM1, ENABLE);
-    GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 
     TIM_InternalClockConfig(TIM1);
 
@@ -30,4 +28,15 @@ void Timer_Init(void)
 
     TIM_Cmd(TIM1, ENABLE);
 }
+
+/*
+void TIM1_UP_IRQHandler(void)
+{
+	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)
+	{
+		
+		TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
+	}
+}
+*/
 

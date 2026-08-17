@@ -12,6 +12,9 @@ add_executable(phc
     Hardware/PWM.c
     Hardware/Motor.c
     Hardware/Encoder.c
+    Hardware/LED.c
+    Hardware/OLED.c
+    Hardware/OLED_Data.c
     System/Delay.c
     System/Timer.c
     Start/system_stm32f10x.c
@@ -46,4 +49,3 @@ add_custom_command(TARGET phc POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:phc> phc.hex
     COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:phc> phc.bin
 )
-

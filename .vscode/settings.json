@@ -1,0 +1,12 @@
+{
+    "cmake.cmakePath": "cube-cmake",
+    "cmake.environment": {
+        "PATH": "C:\\Users\\x2093\\.vscode\\extensions\\stmicroelectronics.stm32cube-ide-core-1.4.0-win32-x64\\resources\\binaries\\win32\\x86_64;C:\\Users\\x2093\\.vscode\\extensions\\stmicroelectronics.stm32cube-ide-build-cmake-1.46.0-win32-x64\\resources\\cube-cmake\\win32\\x86_64;E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740\\tools\\bin;E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.ninja.win32_1.1.100.202601091506\\tools\\bin;${env:PATH}"
+    },
+    "cmake.preferredGenerators": [
+        "Ninja"
+    ],
+    "cmake.configureArgs": [
+        "-DCMAKE_COMMAND=cube-cmake"
+    ]
+}
