@@ -14,7 +14,10 @@ add_executable(phc
     Hardware/Encoder.c
     Hardware/LED.c
     Hardware/OLED.c
+    Hardware/Key.c
     Hardware/OLED_Data.c
+    Hardware/MyI2C.c
+    Hardware/MPU6050.c
     System/Delay.c
     System/Timer.c
     Start/system_stm32f10x.c
