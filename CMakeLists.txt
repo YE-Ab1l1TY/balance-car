@@ -18,6 +18,8 @@ add_executable(phc
     Hardware/OLED_Data.c
     Hardware/MyI2C.c
     Hardware/MPU6050.c
+    Hardware/Serial.c
+    Hardware/BlueSerial.c
     System/Delay.c
     System/Timer.c
     Start/system_stm32f10x.c
@@ -26,6 +28,7 @@ add_executable(phc
     Library/stm32f10x_gpio.c
     Library/stm32f10x_rcc.c
     Library/stm32f10x_tim.c
+    Library/stm32f10x_usart.c
 )
 
 target_include_directories(phc PRIVATE
@@ -47,8 +50,26 @@ target_compile_options(phc PRIVATE
 
 target_link_libraries(phc PRIVATE m)
 
+target_link_options(phc PRIVATE
+    -Wl,-u,_printf_float
+)
+
+get_filename_component(ARM_TOOLCHAIN_BIN_DIR "${CMAKE_C_COMPILER}" DIRECTORY)
+find_program(ARM_SIZE_TOOL
+    NAMES arm-none-eabi-size
+    HINTS "${ARM_TOOLCHAIN_BIN_DIR}"
+    NO_DEFAULT_PATH
+    REQUIRED
+)
+find_program(ARM_OBJCOPY_TOOL
+    NAMES arm-none-eabi-objcopy
+    HINTS "${ARM_TOOLCHAIN_BIN_DIR}"
+    NO_DEFAULT_PATH
+    REQUIRED
+)
+
 add_custom_command(TARGET phc POST_BUILD
-    COMMAND ${CMAKE_SIZE} $<TARGET_FILE:phc>
-    COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:phc> phc.hex
-    COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:phc> phc.bin
+    COMMAND ${ARM_SIZE_TOOL} $<TARGET_FILE:phc>
+    COMMAND ${ARM_OBJCOPY_TOOL} -O ihex $<TARGET_FILE:phc> phc.hex
+    COMMAND ${ARM_OBJCOPY_TOOL} -O binary $<TARGET_FILE:phc> phc.bin
 )
