@@ -9,6 +9,7 @@ project(phc LANGUAGES C ASM)
 add_executable(phc
     User/main.c
     User/stm32f10x_it.c
+    User/PID.c
     Hardware/PWM.c
     Hardware/Motor.c
     Hardware/Encoder.c
