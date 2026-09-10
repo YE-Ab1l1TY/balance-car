@@ -1,6 +1,18 @@
 #include "stm32f10x.h"                  // Device header
 #include "PID.h"
 
+void PID_Init(PID_t *p)
+{
+	p->Error0 = 0;
+	p->Error1 = 0;
+	p->ErrorInt = 0;
+	
+	p->Target = 0;
+	p->Actual = 0;
+	
+	p->Out = 0;
+}
+
 void PID_Update(PID_t *p)
 {
 	p->Error1 = p->Error0;
