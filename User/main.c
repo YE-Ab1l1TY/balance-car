@@ -27,6 +27,9 @@ uint8_t KeyNum, RunFlag;
 int16_t LeftPWM, RightPWM;
 int16_t AvePWM, DifPWM;
 
+float LeftSpeed, RightSpeed;
+float AveSpeed, DifSpeed;
+
 PID_t AnglePID = {
     .Kp = 4.5,
     .Ki = 0.2,
@@ -36,6 +39,27 @@ PID_t AnglePID = {
     .OutMin = -100.0f,
 
 };
+
+PID_t SpeedPID = {
+    .Kp = 0,
+    .Ki = 0,
+    .Kd = 0,
+
+    .OutMax = 20.0f,
+    .OutMin = -20.0f,
+
+};
+
+PID_t TurnPID = {
+    .Kp = 0,
+    .Ki = 0,
+    .Kd = 0,
+
+    .OutMax = 50.0f,
+    .OutMin = -50.0f,
+
+};
+
 
  int main(void)
  {
@@ -67,6 +91,8 @@ PID_t AnglePID = {
             if (RunFlag == 0)
             {
                 PID_Init(&AnglePID);
+                PID_Init(&SpeedPID);
+                PID_Init(&TurnPID);
                 RunFlag = 1;
             }
             else
@@ -84,7 +110,21 @@ PID_t AnglePID = {
         OLED_Printf(0, 32, OLED_6X8, "T:%05.1f",AnglePID.Target);
         OLED_Printf(0, 40, OLED_6X8, "A:%05.1f",Angle);
         OLED_Printf(0, 48, OLED_6X8, "O:%05.1f",AnglePID.Out);
-        
+        OLED_Printf(50, 0, OLED_6X8, "  Speed");
+        OLED_Printf(50, 8, OLED_6X8, "%05.2f",SpeedPID.Kp);
+        OLED_Printf(50, 16, OLED_6X8, "%05.2f",SpeedPID.Ki);
+        OLED_Printf(50, 24, OLED_6X8, "%05.2f",SpeedPID.Kd);
+        OLED_Printf(50, 32, OLED_6X8, "%05.1f",SpeedPID.Target);
+        OLED_Printf(50, 40, OLED_6X8, "%05.1f",AveSpeed);
+        OLED_Printf(50, 48, OLED_6X8, "%05.1f",SpeedPID.Out);
+        OLED_Printf(90, 0, OLED_6X8, "  Turn");
+        OLED_Printf(90, 8, OLED_6X8, "%05.2f",TurnPID.Kp);
+        OLED_Printf(90, 16, OLED_6X8, "%05.2f",TurnPID.Ki);
+        OLED_Printf(90, 24, OLED_6X8, "%05.2f",TurnPID.Kd);
+        OLED_Printf(90, 32, OLED_6X8, "%05.1f",TurnPID.Target);
+        OLED_Printf(90, 40, OLED_6X8, "%05.1f",DifSpeed);
+        OLED_Printf(90, 48, OLED_6X8, "%05.1f",TurnPID.Out);
+
         OLED_Update();  
 
         if (BlueSerial_RxFlag == 1)
@@ -114,6 +154,32 @@ PID_t AnglePID = {
                 {
                     AnglePID.Kd = atof(Value);
                 }
+                
+                else if (strcmp(Name, "SpeedKp") == 0)
+                {
+                    SpeedPID.Kp = atof(Value);
+                }
+                else if (strcmp(Name, "SpeedKi") == 0)
+                {
+                    SpeedPID.Ki = atof(Value);
+                }
+                else if (strcmp(Name, "SpeedKd") == 0)
+                {
+                    SpeedPID.Kd = atof(Value);
+                }
+                
+                else if (strcmp(Name, "TurnKp") == 0)
+                {
+                    TurnPID.Kp = atof(Value);
+                }
+                else if (strcmp(Name, "TurnKi") == 0)
+                {
+                    TurnPID.Ki = atof(Value);
+                }
+                else if (strcmp(Name, "TurnKd") == 0)
+                {
+                    TurnPID.Kd = atof(Value);
+                }   
 			}
 			else if (strcmp(Tag, "joystick") == 0)
 			{
@@ -122,20 +188,20 @@ PID_t AnglePID = {
 				int8_t RH = atoi(strtok(NULL, ","));
 				int8_t RV = atoi(strtok(NULL, ","));
 				
-                AnglePID.Target = LV / 10;
-                DifPWM = RH / 2;
+                SpeedPID.Target = LV / 25.0; 
+                TurnPID.Target = RH / 25.0;
                 
 			}
 			
 			BlueSerial_RxFlag = 0;
 		}
          
-       BlueSerial_Printf("[plot,%f,%f]", AnglePID.Target, Angle);
+       BlueSerial_Printf("[plot,%f,%f]", TurnPID.Target, DifSpeed);
     }
 }
 void TIM1_UP_IRQHandler(void)
 {
-    static uint16_t Count0;
+    static uint16_t Count0, Count1;
 
     if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)
     {
@@ -187,6 +253,33 @@ void TIM1_UP_IRQHandler(void)
                 Motor_SetPWM(2, 0);
             }
             
+        }
+
+        Count1++;
+        if (Count1 >= 50)
+        {
+            Count1 = 0;
+
+            LeftSpeed = Encoder_Get(1) / 44.0 / 0.05 / 9.27666;
+            RightSpeed = Encoder_Get(2) / 44.0 / 0.05 / 9.27666;
+
+            AveSpeed = (LeftSpeed + RightSpeed) / 2.0;
+            DifSpeed = LeftSpeed - RightSpeed;
+
+            if (RunFlag)
+            {
+                SpeedPID.Actual = AveSpeed;
+                PID_Update(&SpeedPID);
+                AnglePID.Target = SpeedPID.Out;
+
+                TurnPID.Actual = DifSpeed;
+                PID_Update(&TurnPID);
+                DifPWM = TurnPID.Out;
+            }
+            else
+            {
+                DifPWM = 0;
+            }
         }
 
 
