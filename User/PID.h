@@ -4,6 +4,7 @@
 typedef struct {
 	float Target;
 	float Actual;
+	float Actual1;
 	float Out;
 	
 	float Kp;
@@ -13,9 +14,14 @@ typedef struct {
 	float Error0;
 	float Error1;
 	float ErrorInt;
+
+	float ErrorIntMax;
+	float ErrorIntMin;
 	
 	float OutMax;
 	float OutMin;
+
+	float Outoffset;
 } PID_t;
 
 void PID_Init(PID_t *p);

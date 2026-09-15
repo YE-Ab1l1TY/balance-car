@@ -31,32 +31,43 @@ float LeftSpeed, RightSpeed;
 float AveSpeed, DifSpeed;
 
 PID_t AnglePID = {
-    .Kp = 4.5,
+    .Kp = 4.5f,
     .Ki = 0.2,
     .Kd = 3.1,
 
     .OutMax = 100.0f,
     .OutMin = -100.0f,
 
+    .Outoffset = 3.0f,
+
+    .ErrorIntMax = 600.0f,
+    .ErrorIntMin = -600.0f,
+
 };
 
 PID_t SpeedPID = {
-    .Kp = 0,
-    .Ki = 0,
+    .Kp = 2.0f,
+    .Ki = 0.05f,
     .Kd = 0,
 
     .OutMax = 20.0f,
     .OutMin = -20.0f,
 
+    .ErrorIntMax = 150.0f,
+    .ErrorIntMin = -150.0f,
+
 };
 
 PID_t TurnPID = {
-    .Kp = 0,
-    .Ki = 0,
+    .Kp = 4.0f,
+    .Ki = 4.0f,
     .Kd = 0,
 
     .OutMax = 50.0f,
     .OutMin = -50.0f,
+
+    .ErrorIntMax = 20.0f,
+    .ErrorIntMin = -20.0f,
 
 };
 
@@ -82,7 +93,7 @@ PID_t TurnPID = {
         }
         else
         {
-            LED_OFF();
+            LED_OFF(); 
         }
 
         KeyNum = Key_GetNum();
