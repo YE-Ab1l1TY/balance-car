@@ -453,4 +453,19 @@ VS Code
 
 ---
 
+## License
+
+除第三方代码外，本项目中由作者编写的代码采用 [MIT License](LICENSE)。
+
+本仓库包含部分第三方代码，包括：
+
+- STM32F10x Standard Peripheral Library — STMicroelectronics
+- CMSIS — Arm Limited
+- OLED 驱动 — 江协科技
+- NRF24L01 驱动 — 江协科技
+
+第三方代码不适用仓库根目录的 MIT License，相关版权与使用条款请参见源文件中的原始声明以及 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+---
+
 > 致小时候的 Ability，Nurjan。
