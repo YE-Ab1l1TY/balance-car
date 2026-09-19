@@ -6,7 +6,7 @@
 
 **VS Code + CMake + Ninja + GNU Arm Embedded Toolchain + OpenOCD**
 
-并实现平衡控制、速度控制、转向控制、蓝牙遥控与 PID 在线调参等功能。
+并实现平衡控制、速度控制、转向控制、手机蓝牙遥控、PID 在线调参以及 NRF24L01 独立遥控器控制等功能。
 
 > 本项目是一个以学习和复现为目的的个人工程，与江协科技无官方关联。
 
@@ -14,14 +14,13 @@
 
 ## 项目展示
 
-<!-- 建议后续替换为实车照片，推荐放一张正面或工作状态图 -->
-<!-- 示例：
 <p align="center">
-  <img src="docs/images/car.jpg" width="70%">
+  <img src="docs/images/car.jpg" width="72%">
 </p>
--->
 
-> 📷 **图片占位：平衡车实物图 / 工作状态图**
+<p align="center">
+  <sub>小车昵称：泡模板</sub>
+</p>
 
 ---
 
@@ -37,7 +36,7 @@
 | 姿态传感器 | MPU6050 |
 | 控制算法 | 角度环 + 速度环 + 转向环 |
 | 人机交互 | OLED + 按键 + 蓝牙 |
-| 遥控方式 | 手机蓝牙控制 |
+| 遥控方式 | 手机蓝牙 / NRF24L01 独立遥控器 |
 | 工程基础 | 参考江协科技平衡车教程 |
 
 ---
@@ -108,8 +107,6 @@ CMake >= 3.22
 
 > 当前部分配置中仍包含开发机上的 STM32CubeIDE / OpenOCD 绝对路径。  
 > Clone 到其他电脑后，需要根据自己的安装位置修改 `.vscode/settings.json`、`.vscode/tasks.json` 和 `.vscode/launch.json` 中的相关路径。
-
-> 📷 **图片占位：VS Code 工程开发环境截图**
 
 ---
 
@@ -186,8 +183,6 @@ STM32F103
 
 这也是本项目相对于原 Keil 工程做的主要开发流程适配之一。
 
-> 📷 **图片占位：Ctrl + Shift + B 编译 / 烧录操作截图**
-
 ---
 
 # 工程结构
@@ -196,7 +191,7 @@ STM32F103
 balance-car
 │
 ├── User/           # 主程序、PID、应用逻辑
-├── Hardware/       # 电机、编码器、MPU6050、蓝牙、OLED 等驱动
+├── Hardware/       # 电机、编码器、MPU6050、蓝牙、OLED、NRF24L01 等驱动
 ├── System/         # Timer、Delay
 ├── Library/        # STM32F10x 标准外设库
 ├── Start/          # 启动文件与系统初始化
@@ -211,7 +206,7 @@ balance-car
 整体软件关系可以简化为：
 
 ```text
-        Bluetooth / Key
+   Bluetooth / NRF24L01 / Key
               │
               ▼
           User/main.c
@@ -241,7 +236,7 @@ balance-car
 核心控制关系：
 
 ```text
-                 手机蓝牙
+          手机蓝牙 / 独立遥控器
               /           \
              ▼             ▼
          目标速度        目标转向
@@ -298,16 +293,40 @@ TIM1：1 ms 基础中断
 - OLED 参数显示
 - 按键启停
 - 蓝牙串口通信
-- 蓝牙摇杆控制
+- 手机蓝牙摇杆控制
 - 蓝牙 PID 在线调参
+- NRF24L01 独立遥控器控制
 - 控制数据回传
 - 大倾角自动停机保护
 
-> 📷 **图片占位：OLED 工作界面**
->
-> 📷 **图片占位：手机蓝牙控制界面**
->
-> 📷 **图片占位：PID 调参小程序 / 曲线截图**
+<p align="center">
+  <img src="docs/images/oled.jpg" width="58%">
+</p>
+
+<p align="center">
+  <sub>OLED 实时参数显示</sub>
+</p>
+
+---
+
+# 控制方式
+
+目前提供两种控制方式。
+
+| 方式 | 功能 |
+|---|---|
+| 手机蓝牙 | 摇杆控制、PID 在线调参、数据绘图 |
+| 独立遥控器 | 通过 NRF24L01 进行无线控制 |
+
+<p align="center">
+  <img src="docs/images/phone-control.jpg" width="34%">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/images/remote.jpg" width="48%">
+</p>
+
+<p align="center">
+  <sub>手机蓝牙调参界面 / NRF24L01 独立遥控器</sub>
+</p>
 
 ---
 
@@ -344,8 +363,6 @@ PID_t AnglePID = {
 
 因此仓库中的 PID 参数仅适用于当前样机，不建议直接作为其他小车的最终参数。
 
----
-
 ## 蓝牙在线调参
 
 当前工程支持通过蓝牙修改：
@@ -365,9 +382,7 @@ TurnKp  / TurnKi  / TurnKd
 → 测试
 ```
 
-适合在实车调试时快速寻找合适参数。
-
-> 📷 **图片占位：蓝牙 PID 调参界面**
+手机端同时可以绘制实时数据曲线，方便观察控制效果并调整参数。
 
 ---
 
@@ -432,56 +447,12 @@ VS Code
 
 ---
 
-# Images
-
-Markdown / GitHub README **支持直接插入图片**。
-
-推荐将项目图片统一放到：
-
-```text
-docs/images/
-```
-
-例如：
-
-```text
-docs/
-└── images/
-    ├── car.jpg
-    ├── vscode.png
-    ├── bluetooth.png
-    └── pid-tuning.png
-```
-
-然后在 README 中使用：
-
-```markdown
-![Balance Car](docs/images/car.jpg)
-```
-
-如果想控制 GitHub 页面上的图片宽度，可以使用 HTML：
-
-```html
-<p align="center">
-  <img src="docs/images/car.jpg" width="70%">
-</p>
-```
-
-建议后续补充：
-
-```text
-1. 平衡车实物图
-2. VS Code 开发环境截图
-3. Ctrl + Shift + B 编译 / 烧录截图
-4. OLED 工作界面
-5. 手机控制界面
-6. PID 调参程序 / 曲线图
-```
-
----
-
 ## License
 
 当前项目主要作为个人学习工程。
 
 如果后续正式公开仓库，建议根据代码来源及个人开源意愿补充合适的开源许可证。
+
+---
+
+> 致小时候的 Ability，Nurjan。
