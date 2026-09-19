@@ -37,6 +37,7 @@
 | 控制算法 | 角度环 + 速度环 + 转向环 |
 | 人机交互 | OLED + 按键 + 蓝牙 |
 | 遥控方式 | 手机蓝牙 / NRF24L01 独立遥控器 |
+| CubeMX 配置 | `phc.ioc`（硬件配置参考） |
 | 工程基础 | 参考江协科技平衡车教程 |
 
 ---
@@ -107,6 +108,8 @@ CMake >= 3.22
 - GDB 调试
 
 请将 `cmake`、`ninja`、`arm-none-eabi-gcc`、`arm-none-eabi-gdb` 和 `openocd` 所在目录加入本机 `PATH`，重启 VS Code 后再构建。烧录和调试还需设置环境变量 `OPENOCD_SCRIPTS`，指向本机 OpenOCD 脚本目录（该目录下应有 `interface/stlink-dap.cfg` 和 `target/stm32f1x.cfg`）。F5 调试需要安装提供 `stgdbtarget` 的 STM32 VS Code 扩展。上述工具路径和环境变量只在本机设置，不写入仓库。
+
+当前仓库中的通用化 VS Code / CMake 配置已在 Windows 环境下完成 Debug 构建验证。
 
 ---
 
@@ -200,8 +203,11 @@ balance-car
 │
 ├── CMakeLists.txt
 ├── CMakePresets.json
-└── STM32F103XX_FLASH.ld
+├── STM32F103XX_FLASH.ld
+└── phc.ioc         # STM32CubeMX 配置参考
 ```
+
+> `phc.ioc` 用于保留 STM32CubeMX 中的 MCU、时钟、引脚和外设配置，便于查看硬件配置；本项目实际构建仍以 CMake 工程为准。
 
 整体软件关系可以简化为：
 
@@ -444,14 +450,6 @@ VS Code
 ```
 
 方便进一步学习 STM32 工程组织、交叉编译、调试和版本管理。
-
----
-
-## License
-
-当前项目主要作为个人学习工程。
-
-如果后续正式公开仓库，建议根据代码来源及个人开源意愿补充合适的开源许可证。
 
 ---
 
