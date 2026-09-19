@@ -74,6 +74,7 @@ GDB
 cmake --version
 ninja --version
 arm-none-eabi-gcc --version
+arm-none-eabi-gdb --version
 openocd --version
 ```
 
@@ -105,8 +106,7 @@ CMake >= 3.22
 - OpenOCD 烧录
 - GDB 调试
 
-> 当前部分配置中仍包含开发机上的 STM32CubeIDE / OpenOCD 绝对路径。  
-> Clone 到其他电脑后，需要根据自己的安装位置修改 `.vscode/settings.json`、`.vscode/tasks.json` 和 `.vscode/launch.json` 中的相关路径。
+请将 `cmake`、`ninja`、`arm-none-eabi-gcc`、`arm-none-eabi-gdb` 和 `openocd` 所在目录加入本机 `PATH`，重启 VS Code 后再构建。烧录和调试还需设置环境变量 `OPENOCD_SCRIPTS`，指向本机 OpenOCD 脚本目录（该目录下应有 `interface/stlink-dap.cfg` 和 `target/stm32f1x.cfg`）。F5 调试需要安装提供 `stgdbtarget` 的 STM32 VS Code 扩展。上述工具路径和环境变量只在本机设置，不写入仓库。
 
 ---
 
@@ -167,7 +167,7 @@ STM32: 编译并烧录 (OpenOCD)
 
 第一次使用 `Ctrl + Shift + B` 时，VS Code 可能会要求选择具体的 Build Task。
 
-如果已经正确配置本机工具路径，之后即可直接通过 VS Code 完成：
+如果已按上文配置本机 `PATH` 和 `OPENOCD_SCRIPTS`，之后即可直接通过 VS Code 完成：
 
 ```text
 编译

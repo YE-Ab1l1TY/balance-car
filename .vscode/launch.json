@@ -7,21 +7,17 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "CMake: 编译 (Debug)",
-            "program": "${workspaceFolder}\\build\\Debug\\phc.elf",
-            "gdb": "E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740\\tools\\bin\\arm-none-eabi-gdb.exe",
+            "program": "${workspaceFolder}/build/Debug/phc.elf",
+            "gdb": "arm-none-eabi-gdb",
             "deviceName": "STM32F103C8T6",
             "deviceCore": "Cortex-M3",
-            "serverExe": "openocd.exe",
-            "serverCwd": "E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.openocd.win32_2.4.400.202601091506\\tools\\bin",
+            "serverExe": "openocd",
+            "serverCwd": "${workspaceFolder}",
             "serverParameters": [
-                "-s",
-                "E:\\ST\\STM32CubeIDE_2.1.1\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.debug.openocd_2.3.300.202602021527\\resources\\openocd\\st_scripts",
-                "-f",
-                "interface/stlink-dap.cfg",
-                "-f",
-                "target/stm32f1x.cfg",
-                "-c",
-                "adapter speed 1000"
+                "-s", "${env:OPENOCD_SCRIPTS}",
+                "-f", "interface/stlink-dap.cfg",
+                "-f", "target/stm32f1x.cfg",
+                "-c", "adapter speed 1000"
             ],
             "serverHost": "localhost",
             "serverPort": "3333",
@@ -30,8 +26,8 @@
             "runEntry": "main",
             "imagesAndSymbols": [
                 {
-                    "imageFileName": "${workspaceFolder}\\build\\Debug\\phc.elf",
-                    "symbolFileName": "${workspaceFolder}\\build\\Debug\\phc.elf"
+                    "imageFileName": "${workspaceFolder}/build/Debug/phc.elf",
+                    "symbolFileName": "${workspaceFolder}/build/Debug/phc.elf"
                 }
             ]
         }
