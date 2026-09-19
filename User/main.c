@@ -10,6 +10,7 @@
 #include "Serial.h"
 #include "BlueSerial.h"
 #include "PID.h"
+#include "NRF24L01.h"
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
@@ -82,6 +83,7 @@ PID_t TurnPID = {
     Motor_Init();
     Encoder_Init();
     Serial_Init();
+    NRF24L01_Init();
 
     Timer_Init();
 
@@ -136,7 +138,20 @@ PID_t TurnPID = {
         OLED_Printf(90, 40, OLED_6X8, "%05.1f",DifSpeed);
         OLED_Printf(90, 48, OLED_6X8, "%05.1f",TurnPID.Out);
 
-        OLED_Update();  
+        OLED_Update();
+        
+        if (NRF24L01_Receive() == 1)
+        {
+//            int8_t LH = NRF24L01_RxPacket[0];
+			int8_t LV = NRF24L01_RxPacket[1];
+			int8_t RH = NRF24L01_RxPacket[2];
+//			  int8_t RV = NRF24L01_RxPacket[3];
+				
+            SpeedPID.Target = LV / 25.0; 
+            TurnPID.Target = RH / 25.0;
+
+        }
+
 
         if (BlueSerial_RxFlag == 1)
 		{

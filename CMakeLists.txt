@@ -21,6 +21,7 @@ add_executable(phc
     Hardware/MPU6050.c
     Hardware/Serial.c
     Hardware/BlueSerial.c
+    Hardware/NRF24L01.c
     System/Delay.c
     System/Timer.c
     Start/system_stm32f10x.c
